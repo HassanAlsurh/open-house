@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <H1>Edit the Listing</H1>
+
+
+    <form action="/listing/<%= current._id %>?_method=PUT" method="post">
+
+        <label for="streetAddress">Street Address:</label>
+        <input type="text" name="streetAddress" required value="<%= current.streetAddress %>">
+        
+        <br />
+        <label for="city">City: </label>
+        <input type="text" name="city" required value="<%= current.city %>">
+        
+        <br />
+        <label for="price">Price: </label>
+        <input type="number" name="price" required min="0" value="<%= current.price %>"> 
+        
+        <br />
+        <label for="size">Size: </label>
+        <input type="number" name="size" required min="0" value="<%= current.size %>">
+        
+        <br />
+        <label for="image">Image: </label>
+        <input type="text" name="image" value="<%= current.image %>">
+
+        <br />
+        <button type="submit">Submit Edited listing</button>
+    </form>
+</body>
+</html>

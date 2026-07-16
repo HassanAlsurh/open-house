@@ -17,7 +17,19 @@
     For only BHD <%= current.price %><br/>
     You can aquire a properity on street <%= current.streetAddress %><br/>
     The properity is <%= current.size %> m<sup>2</sup><br/>
-    Contact its owner: <%= current.owner.username %><br/>
+
+    <!-- <%# if (user._id == current.owner._id) { %>  -->
+    <% if (current.owner._id.equals(user._id)) { %> 
+     You own this
+     <form action="/listing/<%= current._id %>?_method=DELETE" method="post">
+        <button type="submit">Delete the listing</button>
+     </form>
+
+     <a href="/listing/<%= current._id %>/edit">Edit theListing</a>
+     
+    <% } else { %>
+        Contact its owner: <%= current.owner.username %><br/>
+        <% } %>
 </p>
 <img src="<%= current.image %>" alt="cool picture of the properity" width="100%">
 

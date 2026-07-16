@@ -69,8 +69,19 @@ app.post("/listing", isSignedIn, listingCtrl.submitListing);
 
 app.get("/listing", listingCtrl.indexPage);
 
-app.get('/listing/:propId', listingCtrl.detailsPage)
+app.get("/listing/:propId", isSignedIn, listingCtrl.detailsPage);
 
+app.delete("/listing/:listingId", isSignedIn, listingCtrl.deleteListing);
+
+app.get("/listing/:listingId/edit", isSignedIn, listingCtrl.editPage);
+
+app.put("/listing/:listingId", isSignedIn, listingCtrl.editListing);
+
+app.get("/*splat", (req, res) => {
+  res.render("error.ejs", {
+    msg: 404,
+  });
+});
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);
 });

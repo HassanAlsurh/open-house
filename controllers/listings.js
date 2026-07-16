@@ -37,33 +37,75 @@ const submitListing = async (req, res) => {
   res.redirect("/listing");
 };
 
-
 const indexPage = async (req, res) => {
-  const ListingsToShow = await Listing.find().populate('owner')
+  const ListingsToShow = await Listing.find().populate("owner");
 
   // console.log(ListingsToShow);
-  
+
   res.render("listings/index.ejs", {
     listings: ListingsToShow,
-    
   });
 };
 
+const detailsPage = async (req, res) => {
+  const currListing = await Listing.findById(req.params.propId).populate(
+    "owner",
+  );
 
-const detailsPage = async (req,res) => {
+  // console.log('current   >>>>>'+currListing);
 
-  const currListing = await Listing.findById(req.params.propId).populate('owner')
+  res.render("listings/listingDetails.ejs", { current: currListing });
+};
 
-// console.log('current   >>>>>'+currListing);
+const deleteListing = async (req, res) => {
+  const foundlisting = await Listing.findById(req.params.listingId);
+  if (foundlisting.owner.equals(req.session.user._id)) {
+    await Listing.findByIdAndDelete(req.params.listingId);
+  } else {
+    res.render("error.ejs", {
+      msg: "You dont have permission to do this action",
+    });
+  }
 
-  res.render("listings/listingDetails.ejs",{current: currListing})
+  res.redirect("/listing");
+};
 
-}
+const editPage = async (req, res) => {
+  console.log();
 
+  const current = await Listing.findById(req.params.listingId);
+
+  res.render("listings/edit.ejs", {
+    current,
+  });
+};
+
+const editListing = async (req, res) => {
+  const foundlisting = await Listing.findById(req.params.listingId);
+  if (foundlisting.owner.equals(req.session.user._id)) {
+    const newData = {};
+    newData.streetAddress = req.body.streetAddress;
+    newData.city = req.body.city;
+    newData.price = req.body.price;
+    newData.size = req.body.size;
+    newData.image = req.body.image;
+
+    await Listing.findByIdAndUpdate(req.params.listingId, newData);
+    
+    res.redirect(`/listing/${req.params.listingId}`);
+  } else {
+    res.render("error.ejs", {
+      msg: "You dont have permission to do this action",
+    });
+  }
+};
 
 module.exports = {
   showNeForm,
   indexPage,
   submitListing,
-  detailsPage
+  detailsPage,
+  deleteListing,
+  editPage,
+  editListing,
 };
