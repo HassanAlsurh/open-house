@@ -14,6 +14,7 @@ const { MongoStore } = require("connect-mongo");
 
 const authCtrl = require("./controllers/auth");
 const listingCtrl = require("./controllers/listings");
+const questionsCtrl = require("./controllers/questions");
 
 const isSignedIn = require("./middleware/is-signed-in");
 const passUserToView = require("./middleware/pass-user-to-views");
@@ -76,6 +77,11 @@ app.delete("/listing/:listingId", isSignedIn, listingCtrl.deleteListing);
 app.get("/listing/:listingId/edit", isSignedIn, listingCtrl.editPage);
 
 app.put("/listing/:listingId", isSignedIn, listingCtrl.editListing);
+
+// app.get()
+//post a question
+app.post('/listing/:listingId/questions',isSignedIn, questionsCtrl.create)
+
 
 app.get("/*splat", (req, res) => {
   res.render("error.ejs", {
