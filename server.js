@@ -11,6 +11,7 @@ const methodOverride = require("method-override");
 const morgan = require("morgan");
 const session = require("express-session");
 const { MongoStore } = require("connect-mongo");
+const upload = require("./config/multer.js");
 
 const authCtrl = require("./controllers/auth");
 const listingCtrl = require("./controllers/listings");
@@ -66,7 +67,13 @@ app.get("/dashboard", isSignedIn, async (req, res) => {
 
 app.get("/listing/new", isSignedIn, listingCtrl.showNeForm);
 
-app.post("/listing", isSignedIn, listingCtrl.submitListing);
+// post the form and also upload media:
+app.post(
+  "/listing",
+  isSignedIn,
+  upload.single("image"),
+  listingCtrl.submitListing,
+);
 
 app.get("/listing", listingCtrl.indexPage);
 
@@ -76,12 +83,27 @@ app.delete("/listing/:listingId", isSignedIn, listingCtrl.deleteListing);
 
 app.get("/listing/:listingId/edit", isSignedIn, listingCtrl.editPage);
 
-app.put("/listing/:listingId", isSignedIn, listingCtrl.editListing);
+app.put(
+  "/listing/:listingId",
+  isSignedIn,
+  upload.single("image"),
+  listingCtrl.editListing,
+);
 
 // app.get()
 //post a question
-app.post('/listing/:listingId/questions',isSignedIn, questionsCtrl.create)
+app.post("/listing/:listingId/questions", isSignedIn, questionsCtrl.create);
 
+app.post(
+  "/listing/:listingId/favorited-by/:userId",
+  isSignedIn,
+  listingCtrl.favorite,
+);
+app.delete(
+  "/listing/:listingId/unfavorited-by/:userId",
+  isSignedIn,
+  listingCtrl.unfavorite,
+);
 
 app.get("/*splat", (req, res) => {
   res.render("error.ejs", {

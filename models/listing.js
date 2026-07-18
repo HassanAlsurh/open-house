@@ -31,9 +31,17 @@ const listingSchema = new mongoose.Schema(
       min: 0,
     },
     image: {
-      type: String,
-      default:
-        "https://images.pexels.com/photos/20296321/pexels-photo-20296321.jpeg",
+      url: {
+        type: String,
+        required: true,
+      },
+      publicId: {
+        type: String,
+        required: true,
+      },
+      // type: String,
+      // default:
+      // "https://images.pexels.com/photos/20296321/pexels-photo-20296321.jpeg",
     },
     size: {
       type: Number,
@@ -46,7 +54,12 @@ const listingSchema = new mongoose.Schema(
       required: true,
     },
     questions: [questionSchema],
-    // favoritedByUsers: {},
+    favoritedByUsers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true },
 );

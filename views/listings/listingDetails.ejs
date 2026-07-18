@@ -31,18 +31,52 @@
         Contact its owner: <%= current.owner.username %><br/>
         <% } %>
 </p>
-<img src="<%= current.image %>" alt="cool picture of the properity" width="100%">
-
-
-
+<img src="<%= current.image.url %>" alt="cool picture of the properity" width="100%">
+<br/>
+<br/>
 <section>
-    <h1>Questions about this listing?</h1>
+    <h2>Favorites</h2>
+
+
+    <% if ( current.favoritedByUsers.length  === 0 ) { %>
+            <p>No one favorited this listing yet.</p>
+        <% } else if ( current.favoritedByUsers.length  === 1) { %>
+            <p>Favorited by <%= current.favoritedByUsers.length %> person.</p>
+        <% } else { %>
+            <p>Favorited by <%= current.favoritedByUsers.length %> people.</p>
+        <% } %>
+    
+    
+    <% if (userHasFavorited) { %>
+        <form action="/listing/<%= current._id %>/unfavorited-by/<%= user._id %>?_method=DELETE" method="post">
+            <button type="submit">Unfavorite</button>
+        </form>
+    <% } else { %>
+        <form action="/listing/<%= current._id %>/favorited-by/<%= user._id %>" method="post">
+            <button type="submit">Favorite</button>
+        </form>
+        <% } %>
+        
+</section>
+<br/>
+<br/>
+<section>
+    <h2>Questions about this listing?</h2>
     <form action="/listing/<%= current._id %>/questions" method="post">
       <center><textarea name="text" rows="4"  style="width: 80%; "></textarea></center><br/>
         <button type="submit">Submit Question</button>
     </form>
 </section>
 
-
+<section>
+    <h3>Questions by users</h3>
+    <ul>
+        <% current.questions.forEach((item) => { %>
+         <li>
+            <%= item.author.username %> says: <%= item.text %>
+         </li>
+        <% }) %>
+    </ul>
+</section>
 </body>
 </html>
